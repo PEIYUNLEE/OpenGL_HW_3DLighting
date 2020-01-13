@@ -61,7 +61,6 @@ bool LoadObj(const char*  path, std::vector<float> *vertices, std::vector<float>
 			indices.push_back(index[2][2]);
 		}
 	}
-	Print(indices.size());
 	for (unsigned int i = 0; i < indices.size(); i += 2) {
 		vertices->push_back(temp_vertices[(indices[i] - 1) * 3]);
 		vertices->push_back(temp_vertices[(indices[i] - 1) * 3 + 1]);

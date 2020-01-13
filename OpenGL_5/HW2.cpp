@@ -59,6 +59,9 @@ vec4    g_vUp(0.0, 1.0, 0.0, 0.0);
 //----------------------------------------------------------------------------
 Room *room1;
 
+bool leftbtndown = false;
+float beforeX = 0;
+
 //----------------------------------------------------------------------------
 // 函式的原型宣告
 extern void IdleProcess();
@@ -192,6 +195,11 @@ void Win_Mouse(int button, int state, int x, int y) {
 		if (state == GLUT_DOWN) {
 			ScreenToUICoordinate(x, y, pt);
 			UIAction(pt);
+			leftbtndown = true;
+			beforeX = x;
+		}
+		else {
+			leftbtndown = false;
 		}
 		break;
 	case GLUT_MIDDLE_BUTTON:  // 目前按下的是滑鼠中鍵 ，換成 Y 軸
@@ -225,8 +233,6 @@ void Win_SpecialKeyboard(int key, int x, int y) {
 	}
 }
 
-//----------------------------------------------------------------------------
-// The passive motion callback for a window is called when the mouse moves within the window while no mouse buttons are pressed.
 void Win_PassiveMotion(int x, int y) {
 	//g_fPhi = (float)-M_PI*(x - HALF_SIZE) / (HALF_SIZE);  // 轉換成 g_fPhi 介於 -PI 到 PI 之間 (-180 ~ 180 之間)
 	//g_fTheta = (float)M_PI*(float)y / SCREEN_SIZE;;
@@ -235,16 +241,31 @@ void Win_PassiveMotion(int x, int y) {
 	//auto camera = CCamera::getInstance();
 	//camera->updateViewLookAt(eye, at);
 
+	//g_fPhi = (float)-M_PI*(x - HALF_SIZE) / (HALF_SIZE);   // 轉換成 g_fPhi 介於 -PI 到 PI 之間 (-180 ~ 180 之間)
+	//g_fTheta = (float)-M_PI*y / (SCREEN_SIZE);
 
-	g_fPhi = (float)-M_PI*(x - HALF_SIZE) / (HALF_SIZE);   // 轉換成 g_fPhi 介於 -PI 到 PI 之間 (-180 ~ 180 之間)
-	g_fTheta = (float)-M_PI*y / (SCREEN_SIZE);
+	//point4  at(g_fRadius*sin(g_fTheta)*sin(g_fPhi), g_fRadius*cos(g_fTheta), g_fRadius*sin(g_fTheta)*cos(g_fPhi), 1.0f);
 
-	point4  at(g_fRadius*sin(g_fTheta)*sin(g_fPhi), g_fRadius*cos(g_fTheta), g_fRadius*sin(g_fTheta)*cos(g_fPhi), 1.0f);
+	//CCamera::getInstance()->updateLookAt(at);
 
-	CCamera::getInstance()->updateLookAt(at);
+	////room3->RotateBillboard(g_fPhi);
+	////Print(g_fPhi);
+
+
+	if (leftbtndown) {
+		g_fPhi += (float)-M_PI*((x - beforeX) / (HALF_SIZE));   // 轉換成 g_fPhi 介於 -PI 到 PI 之間 (-180 ~ 180 之間)
+		g_fTheta = (float)-M_PI*(y) / (SCREEN_SIZE);
+
+		point4  at(g_fRadius*sin(g_fTheta)*sin(g_fPhi), g_fRadius*cos(g_fTheta), g_fRadius*sin(g_fTheta)*cos(g_fPhi), 1.0f);
+
+		CCamera::getInstance()->updateLookAt(at);
+
+		//room3->RotateBillboard(g_fPhi);
+		Print(g_fPhi);
+		beforeX = x;
+	}
 }
 
-// The motion callback for a window is called when the mouse moves within the window while one or more mouse buttons are pressed.
 void Win_MouseMotion(int x, int y) {
 	//g_fPhi = (float)-M_PI*(x - HALF_SIZE) / (HALF_SIZE); // 轉換成 g_fPhi 介於 -PI 到 PI 之間 (-180 ~ 180 之間)
 	//g_fTheta = (float)M_PI*(float)y / SCREEN_SIZE;
@@ -253,12 +274,26 @@ void Win_MouseMotion(int x, int y) {
 	//auto camera = CCamera::getInstance();
 	//camera->updateViewLookAt(eye, at);
 
+	//g_fPhi = (float)-M_PI*(x - HALF_SIZE) / (HALF_SIZE);   // 轉換成 g_fPhi 介於 -PI 到 PI 之間 (-180 ~ 180 之間)
+	//g_fTheta = (float)-M_PI*y / (SCREEN_SIZE);
 
-	g_fPhi = (float)-M_PI*(x - HALF_SIZE) / (HALF_SIZE);   // 轉換成 g_fPhi 介於 -PI 到 PI 之間 (-180 ~ 180 之間)
-	g_fTheta = (float)-M_PI*y / (SCREEN_SIZE);
+	//point4  at(g_fRadius*sin(g_fTheta)*sin(g_fPhi), g_fRadius*cos(g_fTheta), g_fRadius*sin(g_fTheta)*cos(g_fPhi), 1.0f);
+	//CCamera::getInstance()->updateLookAt(at);
 
-	point4  at(g_fRadius*sin(g_fTheta)*sin(g_fPhi), g_fRadius*cos(g_fTheta), g_fRadius*sin(g_fTheta)*cos(g_fPhi), 1.0f);
-	CCamera::getInstance()->updateLookAt(at);
+	////room3->RotateBillboard(g_fPhi);
+
+	if (leftbtndown) {
+		g_fPhi += (float)-M_PI*((x - beforeX) / (HALF_SIZE));   // 轉換成 g_fPhi 介於 -PI 到 PI 之間 (-180 ~ 180 之間)
+		g_fTheta = (float)-M_PI*(y) / (SCREEN_SIZE);
+
+		point4  at(g_fRadius*sin(g_fTheta)*sin(g_fPhi), g_fRadius*cos(g_fTheta), g_fRadius*sin(g_fTheta)*cos(g_fPhi), 1.0f);
+
+		CCamera::getInstance()->updateLookAt(at);
+
+		//room3->RotateBillboard(g_fPhi);
+		beforeX = x;
+	}
+
 }
 //----------------------------------------------------------------------------
 void GL_Reshape(GLsizei w, GLsizei h)
