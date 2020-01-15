@@ -123,11 +123,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="fsPerPixelLighting.glsl" />
-    <None Include="fsVtxColor.glsl" />
     <None Include="fsVtxNormal.glsl" />
     <None Include="vsPerPixelLighting.glsl" />
-    <None Include="vsVtxColor.glsl" />
-    <None Include="vsVtxNormal.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="SOIL\Release\SOIL.lib" />
